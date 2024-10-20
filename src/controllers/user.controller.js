@@ -3,10 +3,18 @@ import { ApiError } from "../utils/apierrors.js"
 import {User} from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/clodinary.js"
 
-const = async(userId)
+const generateRefreshTokenAndAccessTokens= async(userId)=>
 {
     try {
         const user=await User.findById(userId)
+        accessToken=await user.generateAccessToken()
+        refreshToken=await user.generateRefreshToken()
+
+        user.refreshToken=refreshToken
+        await user.save({validateBeforeSave:false})
+
+        return {accessToken,refreshToken}
+
     } catch (error) {
         throw new ApiError(500,"Something went wrong while generating access and refresh tokens")
     }
@@ -61,12 +69,6 @@ const registerUser=asyncHandler( async (req,res) =>{
 
 
 const loginUser=asyncHandler( async (req,res) =>{
-    
-    
-    
-    
-    //send them in cookies
-
     //get username/email and password
     const {username,email,password}=req.body
     if(!username||!email) throw new ApiError(400,"username or email are required")
@@ -82,6 +84,9 @@ const loginUser=asyncHandler( async (req,res) =>{
     if(!isPasswordValid) throw new ApiError(400,"Incorrect Password")
 
     //assign the user refresh tokens and access tokens
+    const {accessToken,refreshToken}=await generateRefreshTokenAndAccessTokens(user._id)
+
+    //send them in cookies
 
 
 } )
