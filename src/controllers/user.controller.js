@@ -87,8 +87,22 @@ const loginUser=asyncHandler( async (req,res) =>{
     const {accessToken,refreshToken}=await generateRefreshTokenAndAccessTokens(user._id)
 
     //send them in cookies
+    const loggedInUser=await User.findById(user._id).select("-password -refreshToken")
 
+    const options={
+        httpOnly:true,
+        secure:true
+    }
 
+    return res.status(200)
+    .cookie("accessToken",accessToken,options)
+    .cookie("refreshToken",refreshToken,options)
+    .send("User Logged in successfully")
+
+} )
+
+const logoutUser=asyncHandler( async (req,res) =>{
+     
 } )
 
 export {registerUser,loginUser}
