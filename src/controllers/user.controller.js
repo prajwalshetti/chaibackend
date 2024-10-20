@@ -1,7 +1,8 @@
 import { asyncHandler } from "../utils/asynchandler.js"
 import { ApiError } from "../utils/apierrors.js"
 import {User} from "../models/user.model.js"
-import { uploadOnCloudinary } from "../utils/clodinary.js"
+import { uploadOnCloudinary } from "../utils/clodinary.js";
+import verifyJWT from "../"
 
 const generateRefreshTokenAndAccessTokens= async(userId)=>
 {
@@ -105,5 +106,5 @@ const logoutUser=asyncHandler( async (req,res) =>{
      
 } )
 
-export {registerUser,loginUser}
+export {registerUser,loginUser,logoutUser}
 
